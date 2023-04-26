@@ -187,4 +187,8 @@ router.post('/createData', controller.createData)
 
 router.get('/fetchData', controller.fetchData )
 
+router.post('/createBook', controller.createBook)
+
+router.get('/fetchBook', controller.fetchBook)
+
 module.exports = router;
