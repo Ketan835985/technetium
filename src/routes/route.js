@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const userData = require("../userModel/userModel.js")
+const controller = require("../controllers/controller.js")
 
 router.get('/students/:name', function(req, res) {
     let studentName = req.params.name
@@ -12,24 +14,6 @@ router.get("/random" , function(req, res) {
 })
 
 
-router.get("/test-api" , function(req, res) {
-    res.send("hi FunctionUp")
-})
-
-
-router.get("/test-api-2" , function(req, res) {
-    res.send("hi FunctionUp. This is another cool API")
-})
-
-
-router.get("/test-api-3" , function(req, res) {
-    res.send("hi FunctionUp. This is another cool API. And NOw i am bored of creating API's ")
-})
-
-
-router.get("/test-api-4" , function(req, res) {
-    res.send("hi FunctionUp. This is another cool API. And NOw i am bored of creating API's. PLZ STOP CREATING MORE API;s ")
-})
 
 
 
@@ -37,13 +21,7 @@ router.get("/test-api-5" , function(req, res) {
     res.send("hi FunctionUp5. This is another cool API. And NOw i am bored of creating API's. PLZ STOP CREATING MORE API;s ")
 })
 
-router.get("/test-api-6" , function(req, res) {
-    res.send({a:56, b: 45})
-})
 
-router.post("/test-post", function(req, res) {
-    res.send([ 23, 45 , 6])
-})
 
 
 router.post("/test-post-2", function(req, res) {
@@ -204,5 +182,9 @@ router.post('/voting', function(req,res){
     })
     res.send({data: filterAge, status :true})
 })
+
+router.post('/createData', controller.createData)
+
+router.get('/fetchData', controller.fetchData )
 
 module.exports = router;
