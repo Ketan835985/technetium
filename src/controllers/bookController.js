@@ -81,17 +81,33 @@ const getPriceBooks = async function(req,res){
 */
 
 const hardCoverStatus = async function(req,res){
-
-    const allBooks = await bookModel.find().populate({path : 'publisher', match : {"publisher.name" : {$in : ['Penguin','HarperCollins']}},transform:{$set :{isHardCover : true}}})
-        
-
-    res.send({msg : allBooks})
+    const panGuinId = await publisherModel.find({name :{$in : ["Penguin", "HarperCollinsId"]}}).select({_Id : true})
+    let arr = []
+    for(let i = 0; i < panGuinId.length; i++){
+        arr.push(panGuinId[i]._id)
+    }
+        const allBooks = await bookModel.updateMany(
+            {publisher : {$in : arr}},
+            {$set : {isHardCover : true}},
+            {new : true}
+        )
+        const allBooksShow = await bookModel.find().populate({path:'publisher', match :{'publish.name': {$in : ['Penguin','HarperCollins']}}})
+    res.send({msg : allBooks, updatedData : allBooksShow})
 }
 
 const UpdatePrice = async function(req,res){
-    
-    const allBooks = await bookModel.find().populate({path:'author', match : {"author.rating" : {$gte : 3.5}},transform: {$set : {price : 10}}})
-    res.send({msg : allBooks})
+    const allData = await authorModel.find({rating : {$gte : 3.5}}).select({_Id : true})
+    let arr = []
+    for(let i = 0; i < allData.length; i++){
+        arr.push(allData[i]._id)
+    }
+    const allBooks = await bookModel.updateMany(
+        {author : {$in : arr}},
+        {$inc : {price  :  10}},
+        {new : true}
+    )
+    const allBooksShow = await bookModel.find().populate({path:'author', match :{'author.rating': {$gt : 3.5}}})
+    res.send({msg:allBooks, UpdatePriceDaTA : allBooksShow})
 }
 
 module.exports.createBook= createBook
