@@ -24,8 +24,8 @@ router.get('/getAuthorBooks',getAuthorNameBook)
 
 router.get('/getFilterUpdateBook', getFilterUpdateBook)
 
-router.get('/hardCoverStatus', hardCoverStatus)
+router.put('/hardCoverStatus', hardCoverStatus)
 
-router.get('/UpdatePrice', UpdatePrice)
+router.put('/UpdatePrice', UpdatePrice)
 
 module.exports = router;

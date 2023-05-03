@@ -2,7 +2,7 @@ const authorModel = require("../models/authorModel")
 const bookModel= require("../models/bookModel")
 const publisherModel = require("../models/publisherModel")
 const ObjectId = require('mongoose').Types.ObjectId
-const mongoose = require('mongoose')
+// const mongoose = require('mongoose')
 
 
 const getBooksData= async function (req, res) {
@@ -50,6 +50,11 @@ const getAuthorNameBook = async function(req,res){
     res.send({data: allBooks})
 }
 
+
+
+
+
+
 /*find the author of “Two states” and update the book price to 100;  Send back the author_name and updated price in response.  ( This will also need 2  queries- 1st will be a findOneAndUpdate. The second will be a find query with author_id from previous query)
 */
 
@@ -63,32 +68,29 @@ const getFilterUpdateBook = async function(req,res){
     res.send({allData : allAuthor})
 }
 
+// Find the books which costs between 50-100(50,100 inclusive) and respond back with the author names of respective books.
+
+const getPriceBooks = async function(req,res){
+    const allBooks = (await bookModel.find().populate('author').populate('publisher')).filter(x=>{
+        if(x.price >= 50 && x.price <= 100) return author.authorName
+    })
+}
+
 /* a) Add a new boolean attribute in the book schema called isHardCover with a default false value. For the books published by 'Penguin' and 'HarperCollins', update this key to true.
  b) For the books written by authors having a rating greater than 3.5, update the books price by 10 (For eg if old price for such a book is 50, new will be 60)
 */
 
 const hardCoverStatus = async function(req,res){
-    // await bookModel.updateMany(
-    //     {$or : [{"publisher.name" :{$eq : 'Penguin'}},{"publisher.name" :{$eq : 'HarperCollins'}}]},
-    //     {$set : {isHardCover : true}}
-    // );
 
-    const allBooks = await bookModel.find({$or : [{"publisher.name" :{$eq : 'Penguin'}},{"publisher.name" :{$eq : 'HarperCollins'}}]})
-        .populate('publisher')
-        .updateMany(
-            {$or : [{"publisher.name" :{$eq : 'Penguin'}},{"publisher.name" :{$eq : 'HarperCollins'}}]},
-            {$set : {isHardCover : true}}
-        )
+    const allBooks = await bookModel.find().populate({path : 'publisher', match : {"publisher.name" : {$in : ['Penguin','HarperCollins']}},transform:{$set :{isHardCover : true}}})
+        
 
     res.send({msg : allBooks})
 }
 
 const UpdatePrice = async function(req,res){
-    const allBooks = await bookModel.find({"author.rating" : {$gte : 3}}).populate('author').updateMany(
-        {"author.rating" : {$gte : 3}},
-        {$set : {price : 10}},
-        {new : true}
-    )
+    
+    const allBooks = await bookModel.find().populate({path:'author', match : {"author.rating" : {$gte : 3.5}},transform: {$set : {price : 10}}})
     res.send({msg : allBooks})
 }
 
@@ -99,3 +101,4 @@ module.exports.getAuthorNameBook = getAuthorNameBook
 module.exports.getFilterUpdateBook = getFilterUpdateBook
 module.exports.hardCoverStatus = hardCoverStatus
 module.exports.UpdatePrice = UpdatePrice
+module.exports.getPriceBooks = getPriceBooks
