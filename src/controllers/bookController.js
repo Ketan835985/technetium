@@ -2,6 +2,9 @@ const authorModel = require("../models/authorModel")
 const bookModel= require("../models/bookModel")
 const publisherModel = require("../models/publisherModel")
 const ObjectId = require('mongoose').Types.ObjectId
+const classModel = require ('../models/classDetails')
+const studentModel = require('../models/studentData')
+const studentData = require("../models/studentData")
 // const mongoose = require('mongoose')
 
 
@@ -110,6 +113,33 @@ const UpdatePrice = async function(req,res){
     res.send({msg:allBooks, UpdatePriceDaTA : allBooksShow})
 }
 
+const twoStateUpdate = async function(req,res){
+    let statusUpdate = await bookModel.findOneAndUpdate({name : "three States"}, {$set :{name : "four States" }},{new:true}).populate("author").populate('publisher')
+
+    res.send({msg : statusUpdate})
+}
+
+const createClass = async function(req,res){
+    const newClass = await classModel.create(req.body)
+    res.send({msg : newClass})
+}
+
+const createStudent = async function(req,res){
+    const studentData =await studentModel.create(req.body)
+    res.send({msg : studentData})
+}
+
+const getClass = async function(req,res){
+    const studentData =await classModel.find()
+    res.send({msg : studentData})
+}
+
+const getStudent =async function(req,res){
+    const studentData =await studentModel.find()
+    res.send({msg : studentData})
+}
+
+
 module.exports.createBook= createBook
 module.exports.getBooksData= getBooksData
 module.exports.getBooksWithAuthorDetails = getBooksWithAuthorDetails
@@ -118,3 +148,10 @@ module.exports.getFilterUpdateBook = getFilterUpdateBook
 module.exports.hardCoverStatus = hardCoverStatus
 module.exports.UpdatePrice = UpdatePrice
 module.exports.getPriceBooks = getPriceBooks
+module.exports.twoStateUpdate = twoStateUpdate
+
+module.exports.createStudent = createStudent
+module.exports.createClass = createClass
+
+module.exports.getClass = getClass
+module.exports.getStudent = getStudent
