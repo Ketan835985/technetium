@@ -15,6 +15,10 @@ mongoose.connect("mongodb+srv://Ketan_technetium_functionUp:iDikLHzqHJQQP656@clu
 .catch ( err => console.log(err) )
 
 app.use('/', route);
+app.use(function(req,res,next){
+    console.log("hey")
+    next()
+})
 
 
 app.listen(process.env.PORT || 3000, function () {

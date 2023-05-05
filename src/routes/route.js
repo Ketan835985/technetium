@@ -4,8 +4,9 @@ const router = express.Router();
 const authorController= require("../controllers/authorController")
 const { createBook, getBooksData, getBooksWithAuthorDetails, getAuthorNameBook, getFilterUpdateBook, hardCoverStatus, UpdatePrice, twoStateUpdate, createClass, createStudent, getClass, getStudent }= require("../controllers/bookController")
 const { createPublisher }= require('../controllers/PublisherController')
-router.get("/test-me", function (req, res) {
-    res.send("My first ever api!")
+router.get("/test-me", function (req, res,next) {
+    res.send("My first ever api!", req.headers["user-agent"])
+    next()
 })
 
 router.post("/createAuthor", authorController.createAuthor  )
